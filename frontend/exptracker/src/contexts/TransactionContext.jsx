@@ -2,21 +2,11 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { formatDate, getCurrentDateString } from '../utils/formatters';
 import { getCategoryIcon, CATEGORIES } from '../constants/categories';
 
+const initialTransactions = [];
 
-// Initial mock data
-const initialTransactions = [
-  { id: 1, date: '18 Aug', category: 'Shopping', description: 'Clothes and watch', amount: 1101.00, type: 'expense',  },
-  { id: 2, date: '18 Aug', category: 'Shopping', description: 'Clothes and watch', amount: 18025.00, type: 'expense',  },
-  { id: 3, date: '18 Aug', category: 'Education', description: 'Books and Stationary', amount: 5024.00, type: 'expense',  },
-  { id: 4, date: '18 Aug', category: 'Food', description: 'Kirana and Ration', amount: 11021.00, type: 'expense',  },
-  { id: 5, date: '17 Aug', category: 'Shopping', description: 'Clothes and watch', amount: 18025.00, type: 'expense',  }
-];
-
-// Create context
 const TransactionContext = createContext();
 
 export const TransactionProvider = ({ children }) => {
-  // State for transactions and financial data
   const [transactions, setTransactions] = useState(initialTransactions);
   const [balance, setBalance] = useState(12560.00);
   const [monthlyData, setMonthlyData] = useState({
@@ -26,7 +16,6 @@ export const TransactionProvider = ({ children }) => {
     months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']
   });
   
-  // Form state
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
@@ -34,11 +23,9 @@ export const TransactionProvider = ({ children }) => {
     date: getCurrentDateString()
   });
   
-  // Modal state
   const [showAddModal, setShowAddModal] = useState(false);
   const [transactionType, setTransactionType] = useState('expense');
   
-  // Update balance and monthly data whenever transactions change
   useEffect(() => {
     let totalIncome = 0;
     let totalExpense = 0;
@@ -51,10 +38,8 @@ export const TransactionProvider = ({ children }) => {
       }
     });
     
-    // Set balance based on income minus expenses
     setBalance(totalIncome - totalExpense);
     
-    // Update monthly data
     setMonthlyData(prev => ({
       ...prev,
       inc: totalIncome,
@@ -63,18 +48,17 @@ export const TransactionProvider = ({ children }) => {
     }));
   }, [transactions]);
   
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  // Handle form submission
-  const handleSubmit = (e) => {
+  // Updated handleSubmit to handle both income and expense
+  const handleSubmit = (e, transactionData = null, incomeBreakdown = null) => {
     e.preventDefault();
     
-    // Create new transaction
-    const newTransaction = {
+    // If transactionData is passed (from income submission), use it
+    const finalTransactionData = transactionData || {
       id: transactions.length + 1,
       date: formatDate(formData.date),
       category: formData.category,
@@ -83,9 +67,20 @@ export const TransactionProvider = ({ children }) => {
       type: transactionType,
       icon: getCategoryIcon(formData.category, transactionType)
     };
+
+    // Ensure amount is a valid number
+    if (isNaN(finalTransactionData.amount)) {
+      console.error('Invalid amount:', finalTransactionData.amount);
+      return;
+    }
+    
+    // Add additional metadata for income if available
+    if (incomeBreakdown) {
+      finalTransactionData.incomeBreakdown = incomeBreakdown;
+    }
     
     // Add to transactions list
-    setTransactions(prev => [newTransaction, ...prev]);
+    setTransactions(prev => [finalTransactionData, ...prev]);
     
     // Reset form and close modal
     setFormData({
@@ -98,7 +93,6 @@ export const TransactionProvider = ({ children }) => {
     setShowAddModal(false);
   };
   
-  // Open modal with specific transaction type
   const openAddModal = (type) => {
     setTransactionType(type);
     setFormData(prev => ({
@@ -108,7 +102,6 @@ export const TransactionProvider = ({ children }) => {
     setShowAddModal(true);
   };
   
-  // Context value
   const value = {
     transactions,
     balance,
@@ -129,7 +122,6 @@ export const TransactionProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the transaction context
 export const useTransactions = () => {
   const context = useContext(TransactionContext);
   if (context === undefined) {

@@ -19,15 +19,21 @@ const BarChart = () => {
     ));
   };
 
+  const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+
   return (
     <div className="bg-purple-900 rounded-lg p-6 text-white w-full">
+      <div className="text-2xl font-bold ">
+          <p className="text-white">{currentMonth}</p>
+        </div>
       <div className="flex justify-between mb-6">
         <div className="text-center">
           <p className="text-orange-300">Expenses</p>
           <p className="text-xl">₹{formatCurrency(monthlyData.exp)}</p>
         </div>
         <div className="text-center">
-          <p className="text-white">August</p>
+          <p className="text-orange-300">Balance</p>
+          <p className="text-xl">₹{formatCurrency(monthlyData.inc - monthlyData.exp)}</p>
         </div>
         <div className="text-center">
           <p className="text-orange-300">Income</p>

@@ -5,10 +5,9 @@ import { ShoppingCart, BookOpen, Wine, Building, CreditCard, DollarSign, Briefca
 export const CATEGORIES = {
   expense: [
     { id: 'shopping', name: 'Shopping', icon: <ShoppingCart size={20} /> },
-    { id: 'education', name: 'Education', icon: <BookOpen size={20} /> },
+    { id: 'bill&utility', name: 'Bill & Utility', icon: <BookOpen size={20} /> },
     { id: 'food', name: 'Food', icon: <Wine size={20} /> },
-    { id: 'rent', name: 'Rent', icon: <Building size={20} /> },
-    { id: 'emi', name: 'EMI', icon: <CreditCard size={20} /> }
+    { id: 'others', name: 'Others', icon: <Building size={20} /> }
   ],
   income: [
     { id: 'salary', name: 'Salary', icon: <DollarSign size={20} /> },

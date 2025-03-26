@@ -26,9 +26,6 @@ const BalanceCard = () => {
             <Plus size={16} className="mr-1" />
             Add Expense
           </button>
-          <button className="bg-purple-900 text-white hover:bg-purple-800 px-4 py-2 rounded-lg">
-            Export
-          </button>
         </div>
       </div>
       
