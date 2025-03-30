@@ -1,29 +1,29 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useTransactions } from '../../contexts/TransactionContext';
 import { formatCurrency } from '../../utils/formatters';
 import BarChart from './BarChart';
 
 const BalanceCard = () => {
+  const navigate = useNavigate();
   const { balance, openAddModal } = useTransactions();
 
   return (
-    <div className="bg-white rounded-lg shadow mb-6 p-6">
+    <div className="bg-white rounded-lg shadow mb-6 p-6 w-full h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">Balance</h2>
         <div className="flex space-x-2">
-          <button 
-            onClick={() => openAddModal('income')}
-            className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg flex items-center"
+        <button
+            onClick={() => navigate('/addIncome')}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
-            <Plus size={16} className="mr-1" />
             Add Income
           </button>
-          <button 
-            onClick={() => openAddModal('expense')}
-            className="bg-purple-100 text-purple-900 hover:bg-purple-200 px-4 py-2 rounded-lg flex items-center"
+          <button
+            onClick={() => navigate('/addExpense')}
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
           >
-            <Plus size={16} className="mr-1" />
             Add Expense
           </button>
         </div>
